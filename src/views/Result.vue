@@ -3,8 +3,8 @@
     <h1>爬虫旅游票务管理中心商家版</h1>
 
     <div class="box">
-      <div class="result">
-        <ul v-for="(order,index) in result" :key="index">
+      <div class="result" v-for="(order,index) in result" :key="index">
+        <ul >
           <li>
             <div>门票名称</div>
             <div>数量</div>
@@ -21,20 +21,10 @@
             <div>1</div>
             <div>{{item.statusName}}</div>
           </li>
-          <div class="commit"  @click="exchangeTicket(order.orderId)">
-            兑换门票
-          </div>
-          <!-- <div class="commit" v-if="result.status==0">
-            <router-link :to="{
-              path:'/search'
-              }" >
-              再次查询
-            </router-link>
-            
-          </div> -->
-          
         </ul>
-        
+        <div class="commit"  @click="exchange(order.orderId)">
+          兑换门票
+        </div>
        
       </div>
       
@@ -58,6 +48,20 @@
       
     },
     methods: {
+      exchange(id){
+        this.$confirm('此操作将兑换门票, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.exchangeTicket(id);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消兑换'
+          });          
+        });
+      },
       exchangeTicket(id){
         const options = {
           method: 'POST',
@@ -71,8 +75,18 @@
         this.$axios(options).then((res) => {
             console.log(res);  
             // console.log();
+            if(res.data.r<=0){
+              this.$message.warning(res.data.msg);
+              return
+            }
             if(res.data.r==1){
-              console.log('成功了');
+               this.$alert('兑换成功', '', {
+                confirmButtonText: '确定',
+                callback: action => {
+                    this.$router.push('/search');
+                  
+                }
+              });
             }     
         }).catch((error) => {
           console.error('出错了', error);
@@ -90,7 +104,11 @@
         };
         console.log(options);
         this.$axios(options).then((res) => {
-          console.log(res.data.data.orders);       
+          console.log(res);  
+          if(res.data.r<=0){
+            this.$message.warning(res.data.msg);
+            return
+          }     
           this.result = res.data.data.orders;
         }).catch((error) => {
           console.error('出错了', error);
@@ -109,7 +127,11 @@
         };
         console.log(options);
         this.$axios(options).then((res) => {
-          console.log(res.data.data.orders);       
+          console.log(res);       
+          if(res.data.r<=0){
+            this.$message.warning(res.data.msg);
+            return
+          }
           this.result = res.data.data.orders;
         }).catch((error) => {
           console.error('出错了', error);
@@ -128,29 +150,16 @@ h1{
   text-align: center;
 }
 .box{
-  width: 630px;
-  height: 600px;
-  margin: 150px auto;
+
   text-align: center;
 }
-.box input{
-  width: 300px;
-  padding-left: 15px;
-  height: 25px;
-  border-radius: 10px;
-}
-.box input:nth-child(1){
-  margin-bottom: 15px;
-}
-.box .commit{
-  width: 150px;
-  height: 50px;
-  line-height: 50px;
-  margin: 45px auto;
-  background: rgb(87, 192, 187);
-  color: #fff;
-}
 
+
+.result{
+  padding: 10px;
+  color: #fff;
+  /* border: 1px solid #333; */
+}
 .result li{
   display: flex;
   align-items: center;
@@ -162,5 +171,14 @@ h1{
   width: 33.333%;
   border: 1px solid #ccc;
   box-sizing: border-box;
+}
+.box .commit{
+  cursor: pointer;
+  width: 150px;
+  height: 50px;
+  line-height: 50px;
+  margin: 45px auto;
+  background: rgb(87, 192, 187);
+  color: #fff;
 }
 </style>

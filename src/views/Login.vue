@@ -3,11 +3,20 @@
     <h1>爬虫旅游票务管理中心商家版</h1>
 
     <div class="box">
-      <input type="text" placeholder="请填写你的手机号" v-model="ruleForm.mobile">
-      <br>
-      <input type="password" placeholder="请填写你的密码" v-model="ruleForm.password">
-      <div class="commit" @click="submitForm('ruleForm')">登陆</div>
+      
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
+        <el-form-item prop="mobile">
+          <el-input v-model="ruleForm.mobile" placeholder="请填写你的手机号"></el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input type="password" placeholder="请填写你的密码" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')"></el-input>
+        </el-form-item>
+        <div class="login-btn">
+          <el-button type="primary" @click="submitForm('ruleForm')"  v-loading.fullscreen.lock="fullscreenLoading">登录</el-button>
+        </div>
+      </el-form>
     </div>
+    
   </div>
 </template>
 <script>
@@ -15,15 +24,24 @@
     name: 'Login',
     data () {
       return {
+        fullscreenLoading: false,
         ruleForm: {
           mobile: '',
           password: ''
         },
+         rules: {
+          mobile: [
+            { required: true, message: '请输入手机号', trigger: 'blur' }
+          ],
+          password: [
+            { required: true, message: '请输入密码', trigger: 'blur' }
+          ]
+        }
       }
     },
     methods: {
       submitForm(formName) {
-        let _this = this;
+        this.fullscreenLoading = true;
         const options = {
           method: 'POST',
           url:"http://app.tianxiayunyou.com:8092/api/loginByPwd",
@@ -34,9 +52,18 @@
         };
         console.log(options);
         this.$axios(options).then((res) => {
-            console.log(res.data.data);  
-            localStorage.setItem('token',res.data.data.token);     
-            this.$router.push('/search');
+            console.log(res);  
+            this.fullscreenLoading = false;
+            //状态码判断
+            if(res.data.r != 1){
+              this.$message.warning(res.data.msg);
+              return
+            }
+            if(res.data.data.token){
+              localStorage.setItem('token',res.data.data.token);  
+               this.$router.push('/search');
+
+            }
         }).catch((error) => {
           console.error('出错了', error);
         });

@@ -12,9 +12,6 @@ export default new Router({
       path:'/',
       name:'Login',
       component:Login,
-      meta: {
-        keepAlive: false
-      }
     },
     {
       path: '/search',

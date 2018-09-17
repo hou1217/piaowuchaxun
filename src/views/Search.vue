@@ -21,9 +21,9 @@
         <router-link :to="{
           path:'/result',
           query:{id:mobile}
-          }" >
+          }"  class="query">
           查询
-        </router-link> 
+        </router-link>
       </div>
       
     </div>
@@ -72,12 +72,13 @@ h1{
 
 .box .choose{
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   cursor: pointer;
 }
 .choose div{
   padding: 10px;
   border: 1px solid #333;
+  background-color: #ccc;
 }
 .box input{
   width: 300px;
@@ -95,5 +96,11 @@ h1{
   margin: 45px auto;
   background: rgb(87, 192, 187);
   color: #fff;
+}
+.query{
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
 }
 </style>
