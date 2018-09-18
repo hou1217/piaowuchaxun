@@ -97,10 +97,5 @@ h1{
   background: rgb(87, 192, 187);
   color: #fff;
 }
-.query{
-  display: block;
-  width: 100%;
-  height: 100%;
-  text-decoration: none;
-}
+
 </style>

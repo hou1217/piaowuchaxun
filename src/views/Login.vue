@@ -11,8 +11,8 @@
         <el-form-item prop="password">
           <el-input type="password" placeholder="请填写你的密码" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')"></el-input>
         </el-form-item>
-        <div class="login-btn">
-          <el-button type="primary" @click="submitForm('ruleForm')"  v-loading.fullscreen.lock="fullscreenLoading">登录</el-button>
+        <div class="commit" @click="submitForm('ruleForm')"  v-loading.fullscreen.lock="fullscreenLoading">
+          登录
         </div>
       </el-form>
     </div>
@@ -73,7 +73,7 @@
   
   }
 </script>
-<style>
+<style scoped>
 
 h1{
   color: #fff;

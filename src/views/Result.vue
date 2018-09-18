@@ -3,6 +3,15 @@
     <h1>爬虫旅游票务管理中心商家版</h1>
 
     <div class="box">
+      <div v-if="state">
+        <h2>
+          数据库中未查询到数据.....
+        </h2>
+        <div class="commit" @click="returnBack">
+          返回搜索页
+        </div>
+      </div>
+      
       <div class="result" v-for="(order,index) in result" :key="index">
         <ul >
           <li>
@@ -36,7 +45,8 @@
     name: 'Login',
     data () {
       return {
-        result:{}
+        result:{},
+        state:true
       }
     },
     mounted() {
@@ -48,6 +58,9 @@
       
     },
     methods: {
+      returnBack(){
+        this.$router.push('/search');
+      },
       exchange(id){
         this.$confirm('此操作将兑换门票, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -80,6 +93,7 @@
               return
             }
             if(res.data.r==1){
+              
                this.$alert('兑换成功', '', {
                 confirmButtonText: '确定',
                 callback: action => {
@@ -109,6 +123,7 @@
             this.$message.warning(res.data.msg);
             return
           }     
+          this.state = false;
           this.result = res.data.data.orders;
         }).catch((error) => {
           console.error('出错了', error);
@@ -132,6 +147,7 @@
             this.$message.warning(res.data.msg);
             return
           }
+          this.state = false;
           this.result = res.data.data.orders;
         }).catch((error) => {
           console.error('出错了', error);
